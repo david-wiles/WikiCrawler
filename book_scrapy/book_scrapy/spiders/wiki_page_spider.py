@@ -1,4 +1,4 @@
-from scrapy import Spider
+from scrapy.spiders import Spider
 
 
 class WikiPageSpider(Spider):
@@ -7,7 +7,7 @@ class WikiPageSpider(Spider):
     """
     name = 'wikipage'
 
-    start_urls = ['file:///home/david/Desktop/Mockingbird%20-%20Wikipedia.html']
+    start_urls = ["https://en.wikipedia.org/wiki/Misery_(novel)"]
 
     def parse(self, response):
         parsed_page = {}
