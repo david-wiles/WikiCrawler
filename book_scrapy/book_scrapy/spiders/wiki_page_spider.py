@@ -1,31 +1,36 @@
 from scrapy.spiders import Spider
+import re
 
 
 class WikiPageSpider(Spider):
     """
     Spider to get basic information about a book from a wikipedia article
     """
-    name = 'wikipage'
+    name = 'WikiPageSpider'
 
-    start_urls = ["https://en.wikipedia.org/wiki/Misery_(novel)"]
+    start_urls = ["file:///home/david/Desktop/James%20A.%20Michener%20-%20Wikipedia.html",
+                  'file:///home/david/Desktop/Mockingbird%20-%20Wikipedia.html']
 
     def parse(self, response):
         parsed_page = {}
         table_rows = response.css('table.infobox.vcard').xpath('./tbody/tr')
 
         # url (For reference and to prevent duplicates)
-        parsed_page['url'] = response.url
+        parsed_page['URL'] = response.url
 
         # Title
-        parsed_page['title'] = response.xpath('//h1[@id="firstHeading"]/i/text()').get()
-
-        # Image from article, if exists
-        parsed_page['image'] = table_rows[0].xpath('./td/a/@href').get()
+        parsed_page['Name'] = response.xpath('string(//h1[@id="firstHeading"])').get()
 
         # Details from infobox
-        for tr in table_rows[1:]:
-            data = tr.xpath('./td/a/text()').get() or tr.xpath('./td/text()').get()
-            parsed_page[tr.xpath('./th/text()').get()] = data
+        for tr in table_rows:
+            # Get main image from the article, if it exists
+            if (tr.xpath('./td/a[@class="image"]/@href')):
+                parsed_page['Image'] = tr.xpath('./td/a[@class="image"]/@href').get()
+            else:
+                data = tr.xpath('string(./td)').get()
+                title = tr.xpath('./th/text()').get()
+
+                parsed_page[title] = data
 
         # Description from top section in article
         parsed_page['description'] = "".join([
