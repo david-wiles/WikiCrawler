@@ -64,9 +64,10 @@ COOKIES_ENABLED = False
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'book_scrapy.pipelines.BookScrapyPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'book_scrapy.pipelines.DuplicatesPipeline': 1,
+    'book_scrapy.pipelines.PostgrePipeline': 2
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
