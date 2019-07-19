@@ -23,7 +23,7 @@ class BookItem(Item):
     followed_by = Field()
     audio_read_by = Field()
     description = Field()
-    unknown = Field()
+    other = Field()
 
 
 class AuthorItem(Item):
@@ -48,4 +48,4 @@ class AuthorItem(Item):
     subject = Field()
     notable_works = Field()
     description = Field()
-    unknown = Field()
+    other = Field()

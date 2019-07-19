@@ -18,7 +18,7 @@ CREATE TABLE book (
     preceded_by TEXT,
     followed_by TEXT,
     description TEXT,
-    unknown TEXT []
+    other json
 );
 
 CREATE TABLE author (
@@ -42,5 +42,5 @@ CREATE TABLE author (
     subject TEXT,
     notable_works TEXT,
     description TEXT,
-    unknown TEXT []
+    other json
 );
