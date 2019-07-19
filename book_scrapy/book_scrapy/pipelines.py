@@ -37,7 +37,7 @@ class PostgrePipeline(object):
         )
 
     def open_spider(self, spider):
-        self.pool = SimpleConnectionPool(1, 5,
+        self.pool = SimpleConnectionPool(1, 1000,
             dbname=self.dbname, user=self.user,
             password=self.password, host=self.host, port=self.port)
 

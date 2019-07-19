@@ -127,11 +127,11 @@ class PublishersWeeklyCrawler(CrawlSpider):
                 try:
                     if title is not None:
                         new_title = re.sub(r' ', '_', title.lower())
-                        item[new_title] = data
+                        item[new_title] = data.strip()
                 except (KeyError):
-                    other[new_title] = data
+                    other[new_title] = data.strip()
                 except (AttributeError):
-                    unknown.append(data)
+                    unknown.append(data.strip())
 
         # Description from top section in article
         item['description'] = "".join([
