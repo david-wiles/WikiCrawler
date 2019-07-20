@@ -1,9 +1,18 @@
 from scrapy.spiders import CrawlSpider, Rule
-from scrapy.linkextractors import LinkExtractor
-from scrapy.link import Link
-from ..items import BookItem, AuthorItem
-import re
+from ..link_extractors.list_of_books_extractors import \
+    ListOfListsExtractor, BookListAuthorExtractor, BookListBookExtractor
+from ..parsers.wiki_page_parser import WikiPageParser
 
 
-class Lists_Extractor(LinkExtractor):
-    pass
+class ListOfListsCrawler(CrawlSpider):
+    name = "ListOfListsCrawler"
+    start_urls = [
+        "https://en.wikipedia.org/wiki/Lists_of_books"
+    ]
+
+    rules = (
+        Rule(ListOfListsExtractor(), callback='_parse_list'),
+    )
+
+    def _parse_list(self):
+        pass
