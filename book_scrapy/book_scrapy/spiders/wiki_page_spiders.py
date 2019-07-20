@@ -10,7 +10,7 @@ class WikiBookSpider(Spider):
     """
     name = 'WikiBookSpider'
 
-    start_urls = ["file:///home/david/Desktop/Mockingbird%20-%20Wikipedia.html"]
+    start_urls = ["file:///home/david/Desktop/Twelve%20Sharp%20-%20Wikipedia.html"]
 
     def parse(self, response):
         item = BookItem()
@@ -34,21 +34,30 @@ class WikiBookSpider(Spider):
                 item['image'] = tr.xpath('./td/a[@class="image"]/@href').get()
             else:
                 data = tr.xpath('string(./td)').get()
-                title = tr.xpath('./th/text()').get()
+                title = tr.xpath('string(./th)').get()
 
                 try:
                     if title is not None:
-                        new_title = re.sub(r' ', '_', title.lower())
-                        item[new_title] = data
+                        sanitized_title = re.sub(u'[ \u00a0]','_', title.lower())
+                        sanitized_data = re.sub(u'\u00a0', ' ', data.strip())
+
+                        if sanitized_title == 'genres': sanitized_title = 'genre'
+                        if sanitized_title == 'publication_date': sanitized_title = 'published'
+
+                        item[sanitized_title] = sanitized_data
+
                 except (KeyError):
-                    other[new_title] = data
+                    other[sanitized_title] = sanitized_data
                 except (AttributeError):
-                    unknown.append(data)
+                    unknown.append(sanitized_data)
 
         # Description from top section in article
         item['description'] = "".join([
             p.xpath('string()').get()
-            for p in response.xpath('//*[@id="toc"]/preceding-sibling::p')
+            for index in range(10)
+            for p in response
+                .css('div.mw-parser-output')
+                .xpath(f'./p[{index}]')
         ])
 
         other['unknown'] = unknown
@@ -87,21 +96,30 @@ class WikiAuthorSpider(Spider):
                 item['image'] = tr.xpath('./td/a[@class="image"]/@href').get()
             else:
                 data = tr.xpath('string(./td)').get()
-                title = tr.xpath('./th/text()').get()
+                title = tr.xpath('string(./th)').get()
 
                 try:
                     if title is not None:
-                        new_title = re.sub(r' ', '_', title.lower())
-                        item[new_title] = data
+                        sanitized_title = re.sub(u'[ \u00a0]','_', title.lower())
+                        sanitized_data = re.sub(u'\u00a0', ' ', data.strip())
+
+                        if sanitized_title == 'genres': sanitized_title = 'genre'
+
+                        item[sanitized_title] = sanitized_data
+
                 except (KeyError):
-                    other[new_title] = data
+                    other[sanitized_title] = sanitized_data
                 except (AttributeError):
-                    unknown.append(data)
+                    # What caused this error?
+                    unknown.append(sanitized_data)
 
         # Description from top section in article
         item['description'] = "".join([
             p.xpath('string()').get()
-            for p in response.xpath('//*[@id="toc"]/preceding-sibling::p')
+            for index in range(10)
+            for p in response
+                .css('div.mw-parser-output')
+                .xpath(f'./p[{index}]')
         ])
 
         other['unknown'] = unknown
