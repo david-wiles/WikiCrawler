@@ -8,17 +8,18 @@ class ListOfListsExtractor(LinkExtractor):
         lists = response.css('div.div-col.columns.column-width').xpath('./ul/li/a/@href').getall()
         return [Link('https://en.wikipedia.org' + link) for link in lists]
 
+    def extract_as_str(self, response):
+        lists = response.css('div.div-col.columns.column-width').xpath('./ul/li/a/@href').getall()
+        return ['https://en.wikipedia.org' + link for link in lists]
 
-class BookListBookExtractor(LinkExtractor):
 
-    def extract_links(self, response):
+class BookListExtractor(object):
+
+    def extract_books(self, response):
         books = response.css('div.mw-parser-output').xpath('./ul/li/i/a/@href').getall()
-        return [Link('https://en.wikipedia.org' + link) for link in books]
+        return [('https://en.wikipedia.org' + link) for link in books]
 
-
-class BookListAuthorExtractor(LinkExtractor):
-
-    def extract_links(self, response):
+    def extract_authors(self, response):
         # TODO Need to filter out non-author links
         authors = response.css('div.mw-parser-output').xpath('./ul/li/a/@href').getall()
-        return [Link('https://en.wikipedia.org' + link) for link in authors]
+        return [('https://en.wikipedia.org' + link) for link in authors]
