@@ -3,10 +3,14 @@ from scrapy.exceptions import DropItem
 
 
 class DuplicatesPipeline(object):
+    """
+    Pipeline to remove duplicate items based on response url.
+    """
 
     def __init__(self):
         self.urls = set()
 
+    # Check if a url is in the set of urls, if so then stop processing it
     def process_item(self, item, spider):
         if item['url'] in self.urls:
             raise DropItem(f"Duplicate url found: {item['url']}")
@@ -16,6 +20,9 @@ class DuplicatesPipeline(object):
 
 
 class PostgrePipeline(object):
+    """
+    Pipeline to save items into a Postgresql database.
+    """
 
     collection_name = 'scrapy_items'
 
@@ -26,6 +33,7 @@ class PostgrePipeline(object):
         self.host = host
         self.port = port
 
+    # Get connection string from settings
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
@@ -36,14 +44,17 @@ class PostgrePipeline(object):
             port=crawler.settings.get('PGPORT')
         )
 
+    # Create a connection pool upon opening a spider
     def open_spider(self, spider):
         self.pool = SimpleConnectionPool(1, 1000,
             dbname=self.dbname, user=self.user,
             password=self.password, host=self.host, port=self.port)
 
+    # Close all connections on closing a spider
     def close_spider(self, spider):
         self.pool.closeall()
 
+    # Connect to the database and insert an item
     def process_item(self, item, spider):
         conn = self.pool.getconn()
         cur = conn.cursor()

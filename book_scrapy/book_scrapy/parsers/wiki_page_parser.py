@@ -4,6 +4,15 @@ import re
 
 
 class WikiPageParser(object):
+    """
+    Parses a wikipedia article and creates items based on the contents of the article.
+
+    :parameter response: The response from a spider
+
+    Public:
+        parse_book: puts responses into a book item
+        parse_author: puts response into author item
+    """
 
     def __init__(self, response):
         self.response = response

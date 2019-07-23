@@ -65,8 +65,8 @@ COOKIES_ENABLED = False
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'book_scrapy.pipelines.DuplicatesPipeline': 1,
-    'book_scrapy.pipelines.PostgrePipeline': 2
+    # 'book_scrapy.pipelines.DuplicatesPipeline': 1,
+    # 'book_scrapy.pipelines.PostgrePipeline': 2
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -89,3 +89,10 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# Connect to postgre database
+PGDATABASE='wikipedia_bookstore'
+PGUSER='dev'
+PGPASSWORD=''
+PGHOST='127.0.0.1'
+PGPORT='5432'
