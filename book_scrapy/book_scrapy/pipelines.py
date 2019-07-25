@@ -46,7 +46,7 @@ class PostgrePipeline(object):
 
     # Create a connection pool upon opening a spider
     def open_spider(self, spider):
-        self.pool = SimpleConnectionPool(1, 1000,
+        self.pool = SimpleConnectionPool(1, 17,
             dbname=self.dbname, user=self.user,
             password=self.password, host=self.host, port=self.port)
 
@@ -56,18 +56,18 @@ class PostgrePipeline(object):
 
     # Connect to the database and insert an item
     def process_item(self, item, spider):
-        conn = self.pool.getconn()
-        cur = conn.cursor()
+        connection = self.pool.getconn()
+        cur = connection.cursor()
 
         table = item.table
         keys_string = ", ".join(item.keys())
         values = tuple(item.values())
-        params = ", ".join(['%s' for key in item.keys()])
+        params = ", ".join(['%s' for i in range(len(item))])
 
         sql = f"INSERT INTO {table} ({keys_string}) VALUES ({params})"
         cur.execute(sql, values)
 
-        conn.commit()
+        connection.commit()
         cur.close()
-        conn.close()
+        self.pool.putconn(connection)
         return item

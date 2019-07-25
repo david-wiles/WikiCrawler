@@ -14,7 +14,7 @@ CREATE TABLE book (
     isbn TEXT,
     oclc TEXT,
     lc_class TEXT,
-    dewel_decimal TEXT,
+    dewey_decimal TEXT,
     preceded_by TEXT,
     followed_by TEXT,
     description TEXT,
@@ -40,7 +40,7 @@ CREATE TABLE author (
     years_active TEXT,
     subject TEXT,
     notable_works TEXT,
-    noteable_awards TEXT,
+    notable_awards TEXT,
     description TEXT,
     other json
 );
