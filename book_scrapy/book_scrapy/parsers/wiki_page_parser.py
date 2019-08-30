@@ -1,4 +1,4 @@
-from ..items import BookItem, AuthorItem
+from ..items import BookItem, AuthorItem, HPCPostItem
 import json
 import re
 
@@ -120,5 +120,27 @@ class WikiPageParser(object):
 
         other['unknown'] = unknown
         item['other'] = json.dumps(other)
+
+        return item
+
+    def parse_page(self):
+        item = HPCPostItem()
+
+        # Title
+        item['title'] = self.response.xpath('string(//h1[@id="firstHeading"])').get()
+
+        # Url
+        item['url'] = self.response.url
+
+        # Images on page
+        images = self.response.xpath('//img/parent::*/@href').getall()
+        item['images'] = json.dumps(images)
+
+        # Page Text
+        item['text'] = "".join([
+            element.xpath('string()').get()
+            for element in self.response
+                .css('div.mw-parser-output')
+        ])
 
         return item

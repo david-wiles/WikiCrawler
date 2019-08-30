@@ -49,3 +49,11 @@ class AuthorItem(Item):
     notable_awards = Field()
     description = Field()
     other = Field()
+
+
+class HPCPostItem(Item):
+    table = 'hpc_post'
+    url = Field()
+    title = Field()
+    text = Field()
+    images = Field()

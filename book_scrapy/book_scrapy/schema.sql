@@ -44,3 +44,12 @@ CREATE TABLE author (
     description TEXT,
     other json
 );
+
+CREATE TABLE hpc_post (
+    url TEXT PRIMARY KEY NOT NULL UNIQUE,
+    title TEXT,
+    text TEXT,
+    images JSON
+);
+
+CREATE TABLE hpc_topic ();

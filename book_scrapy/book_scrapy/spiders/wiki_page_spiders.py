@@ -26,3 +26,16 @@ class WikiAuthorSpider(Spider):
     def parse(self, response):
         parser = WikiPageParser(response)
         yield parser.parse_author()
+
+
+class WikiPageSpider(Spider):
+    """
+    Test generic page spider
+    """
+    name = "WikiPageSpider"
+
+    start_urls = ["file:///home/david/Documents/scrapes/Supercomputer%20-%20Wikipedia.html"]
+
+    def parse(self, response):
+        parser = WikiPageParser(response)
+        yield parser.parse_page()
