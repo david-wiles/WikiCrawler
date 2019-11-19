@@ -1,6 +1,7 @@
 from scrapy import Item, Field
 
 
+# Attributes specific to a Wikipedia book article
 class BookItem(Item):
     table = 'book'
     url = Field()
@@ -26,6 +27,7 @@ class BookItem(Item):
     other = Field()
 
 
+# Attributes specific to a Wikipedia author article
 class AuthorItem(Item):
     table = 'author'
     url = Field()
@@ -51,9 +53,21 @@ class AuthorItem(Item):
     other = Field()
 
 
-class HPCPostItem(Item):
-    table = 'hpc_post'
+# Generic post attributes. No information from sidebar
+class PostItem(Item):
+    table = 'post'
+    # url = Field()
+    title = Field()
+    text = Field()
+    # image_urls = Field()
+    # images = Field()
+
+
+# Built from a generic topic page, which may contain some text and many links to
+# other articles
+class TopicItem(Item):
+    table = "topic"
     url = Field()
     title = Field()
     text = Field()
-    images = Field()
+    links = Field()

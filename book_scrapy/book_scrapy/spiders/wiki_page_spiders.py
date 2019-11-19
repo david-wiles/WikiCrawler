@@ -4,7 +4,7 @@ from ..parsers.wiki_page_parser import WikiPageParser
 
 class WikiBookSpider(Spider):
     """
-    Spider to get basic information about a book from a wikipedia article
+    Get basic information about a book from a wikipedia article using WikiPageParser
     """
     name = 'WikiBookSpider'
 
@@ -17,7 +17,7 @@ class WikiBookSpider(Spider):
 
 class WikiAuthorSpider(Spider):
     """
-    Spider to get basic information about a book from a wikipedia article
+    Get basic information about a author from a wikipedia article using WikiPageParser
     """
     name = 'WikiAuthorSpider'
 
@@ -30,7 +30,7 @@ class WikiAuthorSpider(Spider):
 
 class WikiPageSpider(Spider):
     """
-    Test generic page spider
+    Get information from any Wikipedia article using WikiPageParser
     """
     name = "WikiPageSpider"
 

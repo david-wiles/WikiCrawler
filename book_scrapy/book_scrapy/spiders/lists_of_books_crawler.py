@@ -6,12 +6,17 @@ from scrapy.http.request import Request
 
 
 class ListOfListsCrawler(Spider):
+    """
+    Extract links from a list of lists. Links can be further processed with callback functions
+    to spiders or more extractors
+    """
     name = "ListOfListsCrawler"
 
     # Start from list of lists
     def start_requests(self):
         return [Request("file:///home/david/Desktop/Lists%20of%20books%20-%20Wikipedia.html", callback=self._parse_)]
 
+    # Extract generic links
     def _parse_(self, response):
         extractor = ListOfListsExtractor()
         links = extractor.extract_as_str(response)

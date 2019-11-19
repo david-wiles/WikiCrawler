@@ -5,7 +5,7 @@ from ..parsers.wiki_page_parser import WikiPageParser
 
 class PublishersWeeklyCrawler(CrawlSpider):
     """
-    Class to get links to bestselling books, as determined by publisher's weekly
+    Extract links to best-selling books linked in the publisher's weekly lists
     """
     name = 'PublishersWeeklyCrawler'
     start_urls = [
@@ -27,11 +27,12 @@ class PublishersWeeklyCrawler(CrawlSpider):
     rules = (Rule(BookLinkExtractor(), callback='_parse_book'),
              Rule(AuthorLinkExtractor(), callback='_parse_author'))
 
+    # Callback function for extracted book links, creates a book spider
     def _parse_book(self, response):
         parser = WikiPageParser(response)
         yield parser.parse_book()
 
-
+    # Callback function for extracted author links, creates an author spider
     def _parse_author(self, response):
         parser = WikiPageParser(response)
         yield parser.parse_author()

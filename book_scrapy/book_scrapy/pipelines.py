@@ -1,27 +1,31 @@
 from psycopg2.pool import SimpleConnectionPool
+from scrapy import FormRequest
 from scrapy.exceptions import DropItem
 
 
 class DuplicatesPipeline(object):
     """
-    Pipeline to remove duplicate items based on response url.
+    Remove duplicate wikipedia pages based on scraped title.
+    Although urls are more likely to be unique, some urls redirect to the same page, so there would be duplicates
+    using that method. Almost all Wikipedia articles will have unique titles (since non-unique titles have
+    a description in parenthesis)
     """
 
     def __init__(self):
-        self.urls = set()
+        self.titles = set()
 
     # Check if a url is in the set of urls, if so then stop processing it
     def process_item(self, item, spider):
-        if item['url'] in self.urls:
-            raise DropItem(f"Duplicate url found: {item['url']}")
+        if item['title'] in self.titles:
+            raise DropItem(f"Duplicate title found: {item['title']}")
         else:
-            self.urls.add(item['url'])
+            self.titles.add(item['title'])
             return item
 
 
 class PostgrePipeline(object):
     """
-    Pipeline to save items into a Postgresql database.
+    Save items into a PostgreSQL database. Uses a connection pool of 16 possible connection
     """
 
     collection_name = 'scrapy_items'
@@ -44,9 +48,9 @@ class PostgrePipeline(object):
             port=crawler.settings.get('PGPORT')
         )
 
-    # Create a connection pool upon opening a spider
+    # Create a connection pool upon opening a spider. Up to 16 connections
     def open_spider(self, spider):
-        self.pool = SimpleConnectionPool(1, 17,
+        self.pool = SimpleConnectionPool(1, 16,
             dbname=self.dbname, user=self.user,
             password=self.password, host=self.host, port=self.port)
 

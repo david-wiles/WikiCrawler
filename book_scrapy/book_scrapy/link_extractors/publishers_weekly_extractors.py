@@ -3,7 +3,9 @@ from scrapy.link import Link
 
 
 class BookLinkExtractor(LinkExtractor):
-
+    """
+    Extract a book from publisher's weekly list
+    """
     def extract_links(self, response):
         # Get each link from the list of books for each year
         links = [
@@ -16,7 +18,9 @@ class BookLinkExtractor(LinkExtractor):
 
 
 class AuthorLinkExtractor(LinkExtractor):
-
+    """
+    Extract an author from publisher's weekly list
+    """
     def extract_links(self, response):
         # Get link for each author
         links = [

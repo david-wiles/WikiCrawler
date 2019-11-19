@@ -1,6 +1,7 @@
-from ..items import BookItem, AuthorItem, HPCPostItem
+from ..items import BookItem, AuthorItem, PostItem, TopicItem
 import json
 import re
+
 
 
 class WikiPageParser(object):
@@ -124,17 +125,17 @@ class WikiPageParser(object):
         return item
 
     def parse_page(self):
-        item = HPCPostItem()
+        item = PostItem()
 
         # Title
         item['title'] = self.response.xpath('string(//h1[@id="firstHeading"])').get()
 
         # Url
-        item['url'] = self.response.url
+        # item['url'] = self.response.url
 
         # Images on page
-        images = self.response.xpath('//img/parent::*/@href').getall()
-        item['images'] = json.dumps(images)
+        # images = self.response.xpath('//img/parent::*/@href').getall()
+        # item['images'] = json.dumps(images)
 
         # Page Text
         item['text'] = "".join([
@@ -142,5 +143,36 @@ class WikiPageParser(object):
             for element in self.response
                 .css('div.mw-parser-output')
         ])
+
+        return item
+
+
+    def parse_topic(self):
+        item = TopicItem()
+
+        # Title
+        item['title'] = self.response.xpath('string(//h1[@id="firstHeading"])').get()
+
+        # Url
+        item['url'] = self.response.url
+
+        # Page Text
+        item['text'] = "".join([
+            element.xpath('string()').get()
+            for element in self.response
+                .css('div.mw-parser-output')
+        ])
+
+        # Post links
+        pages = {}
+        links = self.response.xpath("//a")
+        for link in links:
+            a = str(link.xpath("@href").get())
+            if a[:6] == "/wiki/":
+                page_title = link.xpath("string()").get()
+                page_link = "https://en.wikipedia.org" + a
+                pages[page_title] = page_link
+
+        item["links"] = json.dumps(pages)
 
         return item
